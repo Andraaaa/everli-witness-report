@@ -23,7 +23,7 @@ class FbiApiClient implements FbiCasesContract
             $items = collect($response->json('items') ?? []);
 
             $match = $items
-                ->filter(function ($case) use ($query) {
+                ->first(function ($case) use ($query) {
                     $title = Str::lower($case['title'] ?? '');
                     return Str::contains($title, Str::lower($query));
                 });
@@ -31,8 +31,8 @@ class FbiApiClient implements FbiCasesContract
             if ($match) {
                 return new FbiCaseMatch(
                     $match['uid'] ?? '',
-                    $match['title'] ?? '',
-                    $match['url'] ?? null
+                        $match['title'] ?? '',
+                        $match['url'] ?? null
                 );
             }
            return null;

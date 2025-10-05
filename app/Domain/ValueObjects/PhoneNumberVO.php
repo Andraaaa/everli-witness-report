@@ -6,12 +6,12 @@ use libphonenumber\NumberParseException;
 use libphonenumber\PhoneNumberFormat;
 use libphonenumber\PhoneNumberUtil;
 
-class PhoneNumberVO
+final readonly class PhoneNumberVO
 {
     public function __construct(
-        public readonly ?string $e164,
-        public readonly bool $isValid,
-        public readonly ?string $region
+        public ?string $e164,
+        public bool    $isValid,
+        public ?string $region
     ) {}
 
     public static function parse(string $input, ?string $defaultRegion = 'US'): self
