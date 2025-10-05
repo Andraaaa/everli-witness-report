@@ -35,4 +35,8 @@ return [
         ],
     ],
 
+    'fbi' => [
+        'url' => env('FBI_URL'),
+    ],
+
 ];
