@@ -18,7 +18,6 @@ class FbiApiClient implements FbiCasesContract
            $response = Http::timeout(10)->retry(3, 10)
                ->baseUrl(config('services.fbi.url'))
                ->get('list', ['q' => $query, 'pageSize' => 50]);
-
            if (!$response->ok()) return null;
 
             $items = collect($response->json('items') ?? []);
