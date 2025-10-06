@@ -1,7 +1,9 @@
 <?php
 
 namespace Tests\Feature;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Http;
+uses(RefreshDatabase::class);
 
 it('creates report and appends audit asynchronously', function () {
     Http::fake([

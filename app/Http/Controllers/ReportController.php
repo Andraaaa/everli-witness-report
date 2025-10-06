@@ -3,14 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Services\GetCountryService;
-use App\Services\GetFbiMatch;
-use App\Services\GetPhoneInfo;
+use App\Services\GetFbiMatchService;
+use App\Services\GetPhoneInfoService;
+use App\Services\StoreWitnessReportService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class ReportController extends Controller
 {
-    public function store(Request $request): JsonResponse
+    public function store(Request $request): ?JsonResponse
     {
         $query = (string)$request->input('query');
         $phone = (string)$request->input('phone', '');
@@ -18,10 +19,10 @@ class ReportController extends Controller
             explode(',', $request->header('X-Forwarded-For'))[0] :
             $request->ip();
 
-        return response()->json([
-            'client_country' => (new GetCountryService())->get($phone, $ip),
-            'fbi_match' => (new GetFbiMatch())->get($query),
-            'phone' => (new GetPhoneInfo())->get($phone),
-        ], 201);
+        return response()->json((new StoreWitnessReportService())->store([
+            'query' => $query,
+            'phone' => $phone,
+            'ip' => $ip
+        ]), 201);
     }
 }

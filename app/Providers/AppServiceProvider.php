@@ -7,6 +7,8 @@ use App\Adapters\Geo\IpLookStrategy;
 use App\Domain\Contracts\FbiCasesContract;
 use App\Adapters\Http\FbiApiClient;
 use App\Domain\Contracts\GeoResolverContract;
+use App\Repositories\EloquentWitnessReport;
+use App\Repositories\WitnessReportRepository;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -23,6 +25,8 @@ class AppServiceProvider extends ServiceProvider
                  new IpLookStrategy(),
             );
         });
+
+        $this->app->bind(WitnessReportRepository::class, EloquentWitnessReport::class);
 
     }
 
