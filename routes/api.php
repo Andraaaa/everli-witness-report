@@ -8,4 +8,6 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-Route::post('/reports', [ReportController::class, 'store']);
+Route::middleware('throttle:reports')->group(function () {
+    Route::post('/reports', [ReportController::class, 'store']);
+});
