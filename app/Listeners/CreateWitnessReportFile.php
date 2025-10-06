@@ -34,7 +34,6 @@ class CreateWitnessReportFile
             'validity'       => $r->validity->value,
         ];
 
-        // jednostavno: jedan fajl po prijavi
         Storage::disk('local')->put(
             "reports/{$r->id}.json",
             json_encode($payload, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT)
