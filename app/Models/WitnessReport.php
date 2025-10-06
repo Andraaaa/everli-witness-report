@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\ReportValidity;
+use App\Events\WitnessReportCreated;
 use Illuminate\Database\Eloquent\Model;
 
 class WitnessReport extends Model
@@ -16,5 +17,9 @@ class WitnessReport extends Model
     protected $casts = [
         'phone_valid' => 'bool',
         'validity' => ReportValidity::class,
+    ];
+
+    protected $dispatchesEvents = [
+        'created' => WitnessReportCreated::class,
     ];
 }
