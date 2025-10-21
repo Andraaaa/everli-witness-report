@@ -9,33 +9,36 @@ use Illuminate\Support\Str;
 
 class FbiApiClient implements FbiCasesContract
 {
-
-    function findCase(string $query): ?FbiCaseMatch
+    public function findCase(string $query): ?FbiCaseMatch
     {
-        $key = 'fbi:q:' .md5($query);
+        $key = 'fbi:q:'.md5($query);
 
         return cache()->remember($key, 60, function () use ($query) {
-           $response = Http::timeout(10)->retry(3, 10)
-               ->baseUrl(config('services.fbi.url'))
-               ->get('list', ['q' => $query, 'pageSize' => 50]);
-           if (!$response->ok()) return null;
+            $response = Http::timeout(10)->retry(3, 10)
+                ->baseUrl(config('services.fbi.url'))
+                ->get('list', ['q' => $query, 'pageSize' => 50]);
+            if (! $response->ok()) {
+                return null;
+            }
 
             $items = collect($response->json('items') ?? []);
 
             $match = $items
                 ->first(function ($case) use ($query) {
                     $title = Str::lower($case['title'] ?? '');
+
                     return Str::contains($title, Str::lower($query));
                 });
 
             if ($match) {
                 return new FbiCaseMatch(
                     $match['uid'] ?? '',
-                        $match['title'] ?? '',
-                        $match['url'] ?? null
+                    $match['title'] ?? '',
+                    $match['url'] ?? null
                 );
             }
-           return null;
+
+            return null;
         });
     }
 }

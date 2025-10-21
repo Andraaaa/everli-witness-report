@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreWitnessReportRequest;
 use App\Services\StoreWitnessReportService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 class ReportController extends Controller
 {
@@ -13,12 +12,12 @@ class ReportController extends Controller
     {
         $query = $request->queryString();
         $phone = $request->phoneString();
-        $ip    = $request->clientIpResolved();
+        $ip = $request->clientIpResolved();
 
-        return response()->json((new StoreWitnessReportService())->store([
+        return response()->json((new StoreWitnessReportService)->store([
             'query' => $query,
             'phone' => $phone,
-            'ip' => $ip
+            'ip' => $ip,
         ]), 201);
     }
 }

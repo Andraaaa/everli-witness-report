@@ -4,15 +4,15 @@ namespace App\Providers;
 
 use App\Adapters\Geo\GeoResolver;
 use App\Adapters\Geo\IpLookStrategy;
-use App\Domain\Contracts\FbiCasesContract;
 use App\Adapters\Http\FbiApiClient;
+use App\Domain\Contracts\FbiCasesContract;
 use App\Domain\Contracts\GeoResolverContract;
 use App\Repositories\EloquentWitnessReport;
 use App\Repositories\WitnessReportRepository;
-use Illuminate\Support\ServiceProvider;
 use Illuminate\Cache\RateLimiting\Limit;
-use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -25,7 +25,7 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->bind(GeoResolverContract::class, function () {
             return new GeoResolver(
-                 new IpLookStrategy(),
+                new IpLookStrategy,
             );
         });
 

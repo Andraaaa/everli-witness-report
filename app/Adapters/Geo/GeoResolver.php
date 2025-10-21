@@ -11,9 +11,12 @@ final readonly class GeoResolver implements GeoResolverContract
         private IpLookStrategy $ip,
     ) {}
 
-    function resolve(?string $ip, ?PhoneNumberVO $phoneNumber): ?string
+    public function resolve(?string $ip, ?PhoneNumberVO $phoneNumber): ?string
     {
-        if ($phoneNumber?->region) return strtoupper($phoneNumber->region);
+        if ($phoneNumber?->region) {
+            return strtoupper($phoneNumber->region);
+        }
+
         return $this->ip->country($ip);
     }
 }

@@ -10,9 +10,9 @@ class StoreWitnessReportService
 {
     public function store(array $data): ?WitnessReport
     {
-        $match = (new GetFbiMatchService())->get($data['query']);
-        $phoneInfo = (new GetPhoneInfoService())->get($data['phone']);
-        $country = (new GetCountryService())->get($data['phone'], $data['ip']);
+        $match = (new GetFbiMatchService)->get($data['query']);
+        $phoneInfo = (new GetPhoneInfoService)->get($data['phone']);
+        $country = (new GetCountryService)->get($data['phone'], $data['ip']);
 
         $validity = ($match && $phoneInfo->isValid) ?
             ReportValidity::VALID :
@@ -27,7 +27,7 @@ class StoreWitnessReportService
             'fbi_uid' => $match?->uid,
             'fbi_title' => $match?->title,
             'fbi_url' => $match?->url,
-            'validity' => $validity->value
+            'validity' => $validity->value,
         ]);
     }
 }

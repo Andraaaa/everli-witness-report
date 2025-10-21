@@ -11,7 +11,7 @@ class GetCountryService
     {
         $phoneInfo = PhoneNumberVO::parse($phone, 'US');
 
-        return (!$phoneInfo->region) ?
+        return (! $phoneInfo->region) ?
             app(GeoResolverContract::class)->resolve($ip, $phoneInfo) :
             $phoneInfo->region;
 

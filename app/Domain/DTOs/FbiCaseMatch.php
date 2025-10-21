@@ -2,8 +2,6 @@
 
 namespace App\Domain\DTOs;
 
-use SebastianBergmann\CodeCoverage\Report\Xml\Report;
-
 final class FbiCaseMatch
 {
     public function __construct(

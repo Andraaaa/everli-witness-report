@@ -2,7 +2,6 @@
 
 namespace App\Domain\ValueObjects;
 
-use libphonenumber\NumberParseException;
 use libphonenumber\PhoneNumberFormat;
 use libphonenumber\PhoneNumberUtil;
 
@@ -10,7 +9,7 @@ final readonly class PhoneNumberVO
 {
     public function __construct(
         public ?string $e164,
-        public bool    $isValid,
+        public bool $isValid,
         public ?string $region
     ) {}
 
@@ -22,7 +21,8 @@ final readonly class PhoneNumberVO
             $number = $util->parse($input, $defaultRegion);
             $valid = $util->isValidNumber($number);
             $e164 = $valid ? $util->format($number, PhoneNumberFormat::E164) : null;
-            $region = $util->getRegionCodeForNumber($number)?: null;
+            $region = $util->getRegionCodeForNumber($number) ?: null;
+
             return new self($e164, $valid, $region);
         } catch (\Throwable) {
             return new self(null, false, null);

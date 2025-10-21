@@ -42,6 +42,7 @@ class StoreWitnessReportRequest extends FormRequest
         $xff = $this->header('X-Forwarded-For');
         if ($xff) {
             $ips = explode(',', $xff);
+
             return trim($ips[0]);
         }
 
