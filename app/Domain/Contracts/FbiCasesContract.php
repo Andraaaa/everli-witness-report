@@ -6,5 +6,5 @@ use App\Domain\DTOs\FbiCaseMatch;
 
 interface FbiCasesContract
 {
-    function findCase(string $query): ?FbiCaseMatch;
+    public function findCase(string $query): ?FbiCaseMatch;
 }

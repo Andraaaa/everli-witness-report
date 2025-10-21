@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 
 class EloquentWitnessReport implements WitnessReportRepository
 {
-    function store(array $data): ?WitnessReport
+    public function store(array $data): ?WitnessReport
     {
         $query = $this->newQuery();
 
@@ -18,6 +18,6 @@ class EloquentWitnessReport implements WitnessReportRepository
 
     protected function newQuery(): Builder
     {
-        return (new WitnessReport())->newQuery();
+        return (new WitnessReport)->newQuery();
     }
 }
