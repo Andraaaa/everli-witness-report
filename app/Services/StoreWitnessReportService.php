@@ -10,6 +10,7 @@ class StoreWitnessReportService
 {
     public function store(array $data): ?WitnessReport
     {
+//        dd($data['query'], $data['phone'], $data['ip']);
         $match = (new GetFbiMatchService)->get($data['query']);
         $phoneInfo = (new GetPhoneInfoService)->get($data['phone']);
         $country = (new GetCountryService)->get($data['phone'], $data['ip']);

@@ -10,14 +10,9 @@ class ReportController extends Controller
 {
     public function store(StoreWitnessReportRequest $request): ?JsonResponse
     {
-        $query = $request->queryString();
-        $phone = $request->phoneString();
-        $ip = $request->clientIpResolved();
-
-        return response()->json((new StoreWitnessReportService)->store([
-            'query' => $query,
-            'phone' => $phone,
-            'ip' => $ip,
-        ]), 201);
+        return response()->json((new StoreWitnessReportService)->store(
+            $request->all() + [
+                'ip' => $request->clientIpResolved(),
+            ]), 201);
     }
 }

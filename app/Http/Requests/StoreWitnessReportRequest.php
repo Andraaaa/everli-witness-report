@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreWitnessReportRequest extends FormRequest
+class StoreWitnessReportRequest extends BaseRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -27,15 +27,6 @@ class StoreWitnessReportRequest extends FormRequest
         ];
     }
 
-    public function queryString(): string
-    {
-        return (string) $this->input('query');
-    }
-
-    public function phoneString(): string
-    {
-        return (string) $this->input('phone', '');
-    }
 
     public function clientIpResolved(): string
     {
