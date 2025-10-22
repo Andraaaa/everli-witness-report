@@ -9,7 +9,6 @@ jobs:
   test-and-analysis:
     runs-on: ubuntu-latest
 
-    # Provide DB credentials as environment variables for the job
     env:
       DB_CONNECTION: pgsql
       DB_HOST: 127.0.0.1
