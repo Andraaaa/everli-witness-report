@@ -2,8 +2,6 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
-
 class StoreWitnessReportRequest extends BaseRequest
 {
     /**
@@ -26,7 +24,6 @@ class StoreWitnessReportRequest extends BaseRequest
             'phone' => ['required', 'string'],
         ];
     }
-
 
     public function clientIpResolved(): string
     {

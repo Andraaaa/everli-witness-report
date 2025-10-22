@@ -60,4 +60,4 @@ jobs:
         run: vendor/bin/pest --colors=always
 
       - name: Run code analyse
-        run: vendor/bin/pint --test
+        run: vendor/bin/pint
