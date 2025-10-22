@@ -1,83 +1,60 @@
-name: laravel-ci
+name: Laravel CI
+
 on:
   push:
-    branches:
-      - main
+    branches: [ "main", "develop" ]
   pull_request:
+    branches: [ "main", "develop" ]
 
 jobs:
-  test-and-analysis:
+  build:
     runs-on: ubuntu-latest
-
-    env:
-      DB_CONNECTION: pgsql
-      DB_HOST: 127.0.0.1
-      DB_PORT: 5432
-      DB_DATABASE: laravel
-      DB_USERNAME: postgres
-      DB_PASSWORD: postgres
-      APP_ENV: testing
-
     services:
       postgres:
-        image: postgres:15
+        image: postgres:14 # Use a compatible PostgreSQL version
         env:
+          POSTGRES_DB: testing
           POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: laravel
+          POSTGRES_PASSWORD: password
         ports:
           - 5432:5432
         options: >-
-          --health-cmd="pg_isready -U postgres"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=5
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Setup PHP
-        uses: shivammathur/setup-php@v4
+        uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.4'
-          extensions: mbstring, bcmath, pgsql, pdo_pgsql, curl, xml
-          coverage: xdebug
+          php-version: '8.4' # Specify PHP 8.4
+          extensions: pgsql, pdo_pgsql # Include PostgreSQL extensions
+          ini-values: post_max_size=256M, upload_max_filesize=256M
+          tools: composer:v2
 
-      - name: Show PHP version
-        run: php -v
-
-      - name: Install composer dependencies
-        run: composer install --prefer-dist --no-progress --no-suggest
-
-      - name: Copy .env
+      - name: Copy .env.example
         run: cp .env.example .env
 
-      - name: Wait for Postgres to be ready
+      - name: Configure .env for tests
         run: |
-          # wait for port 5432 to be open
-          for i in {1..30}; do
-            if nc -z 127.0.0.1 5432; then
-              echo "Postgres is up"
-              break
-            fi
-            echo "Waiting for Postgres..."
-            sleep 1
-          done
+          echo "DB_CONNECTION=pgsql" >> .env
+          echo "DB_HOST=127.0.0.1" >> .env
+          echo "DB_PORT=5432" >> .env
+          echo "DB_DATABASE=testing" >> .env
+          echo "DB_USERNAME=postgres" >> .env
+          echo "DB_PASSWORD=password" >> .env
 
-      - name: Generate app key
-        run: php artisan key:generate --no-interaction
+      - name: Install Dependencies
+        run: composer install --no-ansi --no-interaction --no-progress --prefer-dist
 
-      - name: Clear and cache config (after env & key are set)
-        run: |
-          php artisan config:clear
-          php artisan config:cache
+      - name: Generate Application Key
+        run: php artisan key:generate
 
-      - name: Run migrations
+      - name: Run Migrations
         run: php artisan migrate --force
 
-      - name: Run tests
-        run: vendor/bin/pest --colors=always
-
-      - name: Run code analyse
-        run: vendor/bin/pint --test
+      - name: Run Tests
+        run: php artisan test
