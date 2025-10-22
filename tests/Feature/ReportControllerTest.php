@@ -87,3 +87,9 @@ it('normalizes phone to E.164', function () {
     $this->postJson('/api/reports', ['query' => 'John', 'phone' => '+1 202 555 0101'])
         ->assertCreated()->assertJsonPath('phone_e164', '+12025550101');
 });
+
+it('should fail if query is under 2 letters', function () {
+   $this->postJson('/api/reports', ['query'=> 'A', 'phone' => '+1 202 555 0101'])
+       ->assertJsonValidationErrors(['query'])
+       ->assertStatus(422);
+});
