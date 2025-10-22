@@ -1,0 +1,64 @@
+name: laravel-ci
+on:
+  push:
+    branches:
+      - main
+    pull_request:
+
+jobs:
+  test-and-analysis:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: laravel
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U postgres"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5s
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, bcmath, pgsql, pdo_pgsql, curl, xml
+          coverage: xdebug
+
+      - name: Install composer dependencies
+        run: composer install --prefer-dist --no-progress --no-suggest --ignore-platform-reqs
+
+      - name: Copy .env
+        run: cp .env.example .env
+
+      - name: Set PostreSQL variables for CI
+        run: |
+          php artisan config:clear
+          php artisan config:cache
+          php artisan env:set DB_CONNECTION=pgsql
+          php artisan env:set DB_HOST=127.0.0.1
+          php artisan env:set DB_PORT=5432
+          php artisan env:set DB_DATABASE=laravel
+          php artisan env:set DB_USERNAME=postgres
+          php artisan env:set DB_PASSWORD=postgres
+
+      - name: Generate app key
+        run: php artisan key:generate
+
+      - name: Run migrations
+        run: php artisan migrate --env=testing --force
+
+      - name: Run tests
+        run: vendor/bin/pest --colors=always
+
+      - name: Run code analyse
+        run: vendor/bin/pint --test
