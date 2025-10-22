@@ -6,5 +6,5 @@ use App\Models\WitnessReport;
 
 interface WitnessReportRepository
 {
-    function store(array $data): ?WitnessReport;
+    public function store(array $data): ?WitnessReport;
 }

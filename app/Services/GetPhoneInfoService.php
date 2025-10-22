@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\Domain\ValueObjects\PhoneNumberVO;
-use App\Enums\ReportValidity;
 
 class GetPhoneInfoService
 {
