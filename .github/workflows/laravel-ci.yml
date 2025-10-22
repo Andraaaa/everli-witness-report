@@ -44,12 +44,12 @@ jobs:
         run: |
           php artisan config:clear
           php artisan config:cache
-          php artisan env:set DB_CONNECTION=pgsql
-          php artisan env:set DB_HOST=127.0.0.1
-          php artisan env:set DB_PORT=5432
-          php artisan env:set DB_DATABASE=laravel
-          php artisan env:set DB_USERNAME=postgres
-          php artisan env:set DB_PASSWORD=postgres
+          sed -i 's/DB_CONNECTION=.*/DB_CONNECTION=pgsql/' .env
+          sed -i 's/DB_HOST=.*/DB_HOST=127.0.0.1/' .env
+          sed -i 's/DB_PORT=.*/DB_PORT=5432/' .env
+          sed -i 's/DB_DATABASE=.*/DB_DATABASE=laravel/' .env
+          sed -i 's/DB_USERNAME=.*/DB_USERNAME=postgres/' .env
+          sed -i 's/DB_PASSWORD=.*/DB_PASSWORD=postgres/' .env
 
       - name: Generate app key
         run: php artisan key:generate
